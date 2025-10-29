@@ -1,1 +1,6 @@
-const init = "Iniciar Servidor "
+import 'dotenv/config';
+import { app } from './app';
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on PORT ${process.env.PORT}`);
+});
