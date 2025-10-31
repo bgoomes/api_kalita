@@ -1,4 +1,5 @@
 import { CorsOptions } from "cors";
+
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
@@ -6,10 +7,10 @@ const allowedOrigins = [
 
 export const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
-    if (process.env.NODE_ENV === 'development' && !origin) {
+    if (!origin || process.env.NODE_ENV === 'development') {
       return callback(null, true);
     }
-    
+
     if (origin && allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
