@@ -1,24 +1,35 @@
-import { prisma } from "../db/prisma";
-import { ServiceFormInput } from "../schemas/Form.schema";
+// src/services/FormService.ts
+import { NotFound } from '../errors/customErros';
+import type { IServiceFormRepository } from '../repositories/interfaces/IserviceFormsRepositoty';
+import { ServiceFormInput } from '../schemas/Form.schema';
 
-/**
- * Limpa o telefone removendo tudo que não for número
- */
-function cleanPhone(phone: string): string {
-  return phone.replace(/\D/g, "");
-}
+export class FormService {
+  constructor(private repository: IServiceFormRepository) {}
 
-export async function createServiceForm(data: ServiceFormInput) {
-  const cleanedPhone = cleanPhone(data.phone);
+  async createServiceForm(data: ServiceFormInput) {
+    return await this.repository.create(data);
+  }
 
-  const newForm = await prisma.serviceForm.create({
-    data: {
-      ...data,
-      phone: cleanedPhone,
-      status: "pending",
-      assigned_photographer: null,
-    },
-  });
+  async getFormById(id: string) {
+    const form = await this.repository.findById(id);
+    if (!form) {
+      throw new NotFound('Formulário não encontrado');
+    }
+    return form;
+  }
 
-  return newForm;
+  async getFormsByEmail(email: string) {
+    return await this.repository.findByEmail(email);
+  }
+
+  // async updateFormStatus(id: string, status: string, photographer?: string) {
+  //   return await this.repository.update(id, {
+  //     status,
+  //     ...(photographer && { assigned_photographer: photographer }),
+  //   });
+  // }
+
+  async getAllForms(page: number = 1, limit: number = 10) {
+    return await this.repository.findAll({ page, limit });
+  }
 }
