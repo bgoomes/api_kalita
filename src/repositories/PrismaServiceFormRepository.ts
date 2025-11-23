@@ -1,7 +1,7 @@
 // src/repositories/implementations/PrismaServiceFormRepository.ts
-import { prisma } from '../../db/prisma';
-import type { ServiceFormInput } from '../../schemas/Form.schema';
-import type { IServiceFormRepository, PaginationParams } from '../interfaces/IserviceFormsRepositoty';
+import { prisma } from '../db/prisma';
+import type { ServiceFormInput } from '../schemas/Form.schema';
+import type { IServiceFormRepository, PaginationParams } from '../interfaces/service-forms/IserviceFormsRepositoty';
 
 export class PrismaServiceFormRepository implements IServiceFormRepository {
   async create(data: ServiceFormInput) {

@@ -1,7 +1,7 @@
 // src/services/FormService.ts
-import { NotFound } from '../errors/customErros';
-import type { IServiceFormRepository } from '../repositories/interfaces/IserviceFormsRepositoty';
-import { ServiceFormInput } from '../schemas/Form.schema';
+import { NotFound } from '../../errors/customErros';
+import type { IServiceFormRepository } from '../../interfaces/service-forms/IserviceFormsRepositoty';
+import { ServiceFormInput } from '../../schemas/Form.schema';
 
 export class FormService {
   constructor(private repository: IServiceFormRepository) {}

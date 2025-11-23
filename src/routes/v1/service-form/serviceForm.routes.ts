@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createServiceFormController, getFormsByEmailController, getServiceFormController } from "../../controllers/FormController";
+import { createServiceFormController, getFormsByEmailController, getServiceFormController } from "../../../controllers/FormController";
 
 const router = Router();
 
