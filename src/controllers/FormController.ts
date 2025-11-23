@@ -1,8 +1,8 @@
 // src/controllers/FormController.ts
 import { Request, Response, NextFunction } from 'express';
 import { serviceFormSchema } from '../schemas/Form.schema';
-import { FormService } from '../services/FormService';
-import { PrismaServiceFormRepository } from '../repositories/implementations/PrismaServiceFormRepository';
+import { FormService } from '../services/service-form/FormService';
+import { PrismaServiceFormRepository } from '../repositories/PrismaServiceFormRepository';
 import { ZodErrors } from '../errors/customErros';
 import { HttpStatusCode } from '../httpStatus/status';
 
