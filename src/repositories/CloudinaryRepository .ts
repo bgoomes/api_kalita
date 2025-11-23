@@ -1,7 +1,19 @@
-import { v2 as cloudinary, UploadApiOptions, type UploadApiResponse } from "cloudinary";
-import type { StorageResult, UploadedFile } from "../interfaces/portifolio-upload/@types";
+import {
+  v2 as cloudinary,
+  UploadApiOptions,
+  type UploadApiResponse,
+} from "cloudinary";
+import type {
+  StorageResult,
+  UploadedFile,
+} from "../interfaces/portifolio-upload/@types";
 import type { IStoragePortifolioRepository } from "../interfaces/portifolio-upload/IStorageRepository";
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export class CloudinaryRepository implements IStoragePortifolioRepository {
   private convertDataToURI(file: UploadedFile): string {
@@ -9,7 +21,10 @@ export class CloudinaryRepository implements IStoragePortifolioRepository {
     const uri = `data:${file.mimetype};base64,${base64}`;
     return uri;
   }
-  async upload(file: UploadedFile, options?: UploadApiOptions): Promise<StorageResult> {
+  async upload(
+    file: UploadedFile,
+    options?: UploadApiOptions
+  ): Promise<StorageResult> {
     const dataURI = this.convertDataToURI(file);
     const result = await cloudinary.uploader.upload(dataURI, {
       resource_type: "auto",
@@ -25,23 +40,20 @@ export class CloudinaryRepository implements IStoragePortifolioRepository {
     const uploadPromisse = files.map((file) => this.upload(file, options));
     return Promise.all(uploadPromisse);
   }
-
   async delete(publicId: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader.destroy(publicId, (error) => {
-        if (error) reject(error);
-        else resolve();
-      });
-    });
+    const result = await cloudinary.uploader.destroy(publicId);
+
+    if (result.result !== "ok") {
+      throw new Error(`Erro ao deletar imagem: ${result.result}`);
+    }
   }
 
-  private mapCloudinaryResult(result: UploadApiResponse): StorageResult{
+  private mapCloudinaryResult(result: UploadApiResponse): StorageResult {
     return {
       url: result.secure_url,
       publicId: result.public_id,
       format: result.format,
       bytes: result.bytes,
-      
     };
   }
 }
